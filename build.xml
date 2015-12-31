@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="attributemap">
+	<property name="version" value="0.1.0b"/>
+	<property name="src.dir" value="src"/>
+	<property name="build.dir" value="build"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir" value="${build.dir}/jar"/>
+
+	<property name="classOutputDir" value="build" />
+
+	<target name="clean">
+	        <delete dir="${build.dir}"/>
+	</target>
+
+	<target name="compile" depends="clean">
+	        <mkdir dir="${classes.dir}"/>
+	        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
+	        </javac>	
+	</target>
+	
+	<target name="jar" depends="compile">
+	        <mkdir dir="${jar.dir}"/>
+	        <jar destfile="${jar.dir}/${ant.project.name}-${version}.jar" basedir="${classes.dir}">
+	        </jar>
+	</target>
+	
+</project>
