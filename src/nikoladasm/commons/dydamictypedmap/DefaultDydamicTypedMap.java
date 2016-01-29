@@ -1,5 +1,5 @@
 /*
- *  SAttributeMap
+ *  DydamicTypedMap
  *  Copyright (C) 2015  Nikolay Platov
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,30 +16,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nikoladasm.sattributemap;
+package nikoladasm.commons.dydamictypedmap;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.requireNonNull;
 
-public class DefaultSAttributeMap implements SAttributeMap {
+public class DefaultDydamicTypedMap implements DydamicTypedMap {
 
-	private ConcurrentHashMap<SAttributeKey<?>, SAttribute<?>> attributeMap =
+	private ConcurrentHashMap<DydamicTypedKey<?>, DydamicTypedValue<?>> map =
 		new ConcurrentHashMap<>();
 	
-	private static final class DefaultSAttribute<T> implements SAttribute<T> {
+	private static final class DefaultDydamicTypedValue<T> implements DydamicTypedValue<T> {
 
-		private final SAttributeKey<T> key;		
+		private final DydamicTypedKey<T> key;		
 		private final AtomicReference<T> value = new AtomicReference<>();
 		
-		public DefaultSAttribute(SAttributeKey<T> key, T value) {
+		public DefaultDydamicTypedValue(DydamicTypedKey<T> key, T value) {
 			this.key = key;
 			this.value.set(value);
 		}
 		
 		@Override
-		public SAttributeKey<T> key() {
+		public DydamicTypedKey<T> key() {
 			return key;
 		}
 
@@ -82,26 +82,26 @@ public class DefaultSAttributeMap implements SAttributeMap {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> SAttribute<T> attr(SAttributeKey<T> key) {
+	public <T> DydamicTypedValue<T> value(DydamicTypedKey<T> key) {
 		requireNonNull(key,"Key can't be null");
-		attributeMap.putIfAbsent(key, new DefaultSAttribute<T>(key, null));
-		return (SAttribute<T>) attributeMap.get(key);
+		map.putIfAbsent(key, new DefaultDydamicTypedValue<T>(key, null));
+		return (DydamicTypedValue<T>) map.get(key);
 	}
 
 	@Override
-	public <T> boolean hasAttr(SAttributeKey<T> key) {
+	public <T> boolean containsKey(DydamicTypedKey<T> key) {
 		requireNonNull(key,"Key can't be null");
-		return (!attributeMap.containsKey(key)) ? false : attributeMap.get(key) != null;
+		return (!map.containsKey(key)) ? false : map.get(key) != null;
 	}
 
 	@Override
 	public void clear() {
-		attributeMap.clear();
+		map.clear();
 	}
 
 	@Override
-	public <T> void remove(SAttributeKey<T> key) {
-		attributeMap.remove(key);
+	public <T> void remove(DydamicTypedKey<T> key) {
+		map.remove(key);
 	}
 
 }

@@ -1,1 +1,1 @@
-# sattributemap
+# dydamictypedmap

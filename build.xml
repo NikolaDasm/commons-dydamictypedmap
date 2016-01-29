@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-     SAttributeMap
+     DydamicTypedMap
      Copyright (C) 2015  Nikolay Platov
  
      This program is free software: you can redistribute it and/or modify
@@ -16,29 +16,75 @@
      You should have received a copy of the GNU Lesser General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<project name="attributemap">
-	<property name="version" value="0.1.0b"/>
+<project name="common-dydamictypedmap">
+	<property name="version" value="0.1.1b"/>
 	<property name="src.dir" value="src"/>
+	<property name="test.dir" value="test"/>
 	<property name="build.dir" value="build"/>
-	<property name="classes.dir" value="${build.dir}/classes"/>
+	<property name="src.classes.dir" value="${build.dir}/classes"/>
+	<property name="test.classes.dir" value="${build.dir}/test-classes"/>
+	<property name="lib.dir" value="lib"/>
     <property name="jar.dir" value="${build.dir}/jar"/>
 
 	<property name="classOutputDir" value="build" />
+
+	<property name="junit.dir" value="${build.dir}/junit"/>
+
+	<path id='test.compile.classpath'>
+		<fileset dir="${lib.dir}">
+			<include name="*.jar"/>
+		</fileset>
+		<pathelement path="${src.classes.dir}"/>
+	</path>
+
+	<path id='test.run.classpath'>
+		<path refid="test.compile.classpath"/>
+		<pathelement path="${test.classes.dir}"/>
+	</path>
 
 	<target name="clean">
 	        <delete dir="${build.dir}"/>
 	</target>
 
-	<target name="compile" depends="clean">
-	        <mkdir dir="${classes.dir}"/>
-	        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
+	<target name="compile-src" depends="clean">
+	        <mkdir dir="${src.classes.dir}"/>
+	        <javac srcdir="${src.dir}"
+	        	destdir="${src.classes.dir}"
+	        	includeantruntime="false">
 	        </javac>	
 	</target>
 	
-	<target name="jar" depends="compile">
+	<target name="compile-test"
+		depends="clean,compile-src">
+	    <mkdir dir="${test.classes.dir}"/>
+	    <javac srcdir="${test.dir}"
+	    	destdir="${test.classes.dir}"
+	    	includeantruntime="false">
+	    	<classpath refid="test.compile.classpath"/>
+	    </javac>	
+	</target>
+	
+	<target name="run-unittest" depends="compile-test">
+		<mkdir dir="${junit.dir}"/>
+		<junit fork="yes" printsummary="withOutAndErr">
+			<formatter type="xml"/>
+			<batchtest todir="${junit.dir}">
+				<fileset dir="${test.classes.dir}">
+					<include name="**/*UnitTest.class"/>
+				</fileset>
+			</batchtest>
+			<classpath refid="test.run.classpath"/>
+		</junit>
+	</target>
+		
+	<target name="jar" depends="compile-src">
 	        <mkdir dir="${jar.dir}"/>
-	        <jar destfile="${jar.dir}/${ant.project.name}-${version}.jar" basedir="${classes.dir}">
+	        <jar destfile="${jar.dir}/${ant.project.name}-${version}.jar" basedir="${src.classes.dir}">
 	        </jar>
 	</target>
 	
+	<target name="test" depends="run-unittest"/>
+	
+	<target name="build" depends="test,jar"/>
+
 </project>

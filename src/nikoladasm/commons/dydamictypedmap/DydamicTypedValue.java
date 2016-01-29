@@ -1,5 +1,5 @@
 /*
- *  SAttributeMap
+ *  DydamicTypedMap
  *  Copyright (C) 2015  Nikolay Platov
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nikoladasm.sattributemap;
+package nikoladasm.commons.dydamictypedmap;
 
-public interface SAttribute<T> {
+public interface DydamicTypedValue<T> {
 
-	SAttributeKey<T> key();
+	DydamicTypedKey<T> key();
 	T get();
 	void set(T value);
 	T getAndSet(T value);

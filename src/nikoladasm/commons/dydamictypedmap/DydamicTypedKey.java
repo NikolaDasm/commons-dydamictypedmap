@@ -1,5 +1,5 @@
 /*
- *  SAttributeMap
+ *  DydamicTypedMap
  *  Copyright (C) 2015  Nikolay Platov
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,29 +16,37 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package nikoladasm.sattributemap;
+package nikoladasm.commons.dydamictypedmap;
 
-public final class SAttributeKey<T> {
+public final class DydamicTypedKey<T> {
 	
-	private Class<T> c;
-	private String name;
+	protected Class<T> type;
+	protected String name;
 	
-	public SAttributeKey(Class<T> c, String name) {
-		this.c = c;
+	public DydamicTypedKey(Class<T> type, String name) {
+		this.type = type;
 		this.name = name;
 	}
 	
-	public static <T> SAttributeKey<T> valueOf(Class<T> c, String name) {
+	public static <T> DydamicTypedKey<T> valueOf(Class<T> type, String name) {
 		if (name == null || name.isEmpty())
 			throw new IllegalArgumentException("Name can't be null or empty");
-		if (c == null)
+		if (type == null)
 			throw new IllegalArgumentException("Class can't be null or empty");
-		return new SAttributeKey<T>(c, name);
+		return new DydamicTypedKey<T>(type, name);
+	}
+
+	public Class<?> type() {
+		return type;
+	}
+	
+	public String name() {
+		return name;
 	}
 	
 	@Override
 	public String toString() {
-		return c.getName()+'#'+name;
+		return type.getName()+'#'+name;
 	}
 	
 	@Override
